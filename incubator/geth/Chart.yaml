@@ -1,0 +1,11 @@
+apiVersion: v2
+appVersion: 1.10.1
+description: A Helm chart for Kubernetes
+name: geth
+type: application
+version: 0.1.0
+home: https://github.com/ethereum/go-ethereum
+icon: https://avatars.githubusercontent.com/u/6250754?s=200&v=4
+keywords:
+  - blockchain
+  - geth

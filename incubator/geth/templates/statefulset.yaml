@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "geth.fullname" . }}
+  labels:
+    {{- include "geth.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "geth.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "geth.fullname" . }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "geth.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "geth.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.securityContext }}
+          securityContext: {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          args:
+          {{- range .Values.image.args }}
+            - {{ . }}
+          {{- end }}
+          {{- if .Values.metrics.enabled }}
+            - --metrics
+            - --pprof
+            - --pprof.addr=0.0.0.0
+          {{- end }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          ports:
+            - name: rpc
+              containerPort: {{ .Values.service.port }}
+          {{- if .Values.metrics.enabled }}
+            - name: metrics
+              containerPort: 6060
+          {{- end }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe: {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe: {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: geth-data
+              mountPath: {{ .Values.persistence.path }}
+              subPath: {{ .Values.persistence.subPath }}
+      volumes:
+        {{- if not .Values.persistence.enabled }}
+        - name: geth-data
+          emptyDir: {}
+        {{- else }}
+        {{- if .Values.existingClaim }}
+        - name: geth-data
+          persistentVolumeClaim:
+            claimName: {{ include "geth.tplValue" (dict "value" .Values.existingClaim "context" $) }}
+        {{- end }}
+  {{- if and .Values.persistence.enabled (not .Values.existingClaim) (not .Values.persistence.volumes) }}
+  volumeClaimTemplates:
+    - metadata:
+        name: geth-data
+        labels:
+          {{- include "geth.labels" . | nindent 10 }}
+      {{- if .Values.volumeClaimTemplates.annotations }}
+        annotations:
+          {{- toYaml .Values.volumeClaimTemplates.annotations | nindent 10 }}
+      {{- end }}
+      spec:
+        accessModes:
+        {{- range .Values.persistence.accessModes }}
+          - {{ . | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+        {{- include "geth.storageClass" . }}
+        selector:
+        {{- if .Values.persistence.matchLabels }}
+          matchLabels: {{- toYaml .Values.persistence.matchLabels | nindent 12 }}
+        {{- end -}}
+        {{- if .Values.persistence.matchExpressions }}
+          matchExpressions: {{- toYaml .Values.persistence.matchExpressions | nindent 12 }}
+        {{- end -}}
+  {{- end }}
+  updateStrategy:
+    type: {{ .Values.updateStrategy }}
+    {{- if .Values.rollingUpdatePartition }}
+    {{- if (eq "Recreate" .Values.updateStrategy) }}
+    rollingUpdate: null
+    {{- else }}
+    rollingUpdate:
+      partition: {{ .Values.rollingUpdatePartition }}
+    {{- end }}
+    {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- end }}
+
+#
