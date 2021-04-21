@@ -2,5 +2,9 @@
 # Chart dependencies
 **/charts/*.tgz
 
+### Sync ####
+incubator-index
+incubator-sync
+
 ### Other ###
 .DS_Store
