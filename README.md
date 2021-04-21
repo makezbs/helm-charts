@@ -1,6 +1,24 @@
-# makezbs-charts
-Collection of helm-charts for interesting applications. 
+# Makezbs Kubernetes Helm Charts collection
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+The code is provided as-is with no warranties.
+
+## Usage
+
+[Helm](https://helm.sh) must be installed to use the charts.
+Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
+
+Once Helm is set up properly, add the repo as follows:
+
+```console
+helm repo add makezbs https://makezbs.github.io/helm-charts
 ```
-helm repo add makezbs-charts https://charts.makezbs.com/incubator
-```
+
+You can then run `helm search repo makezbs` to see the charts.
+
+
+## License
+
+<!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
+[Apache 2.0 License](https://github.com/makezbs/helm-charts/blob/main/LICENSE).
