@@ -2,3 +2,5 @@
 # Chart dependencies
 **/charts/*.tgz
 
+### Other ###
+.DS_Store

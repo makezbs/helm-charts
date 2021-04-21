@@ -1,0 +1,134 @@
+---
+replicaCount: 1
+
+image:
+  repository: adonato/query-exporter
+  tag: 2.7.0
+  pullPolicy: IfNotPresent
+  command: ["query-exporter", "-H", "0.0.0.0", "--", "/config/config.yaml"]
+
+nameOverride: "query-exporter"
+fullnameOverride: "query-exporter"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+#securityContext:
+#  allowPrivilegeEscalation: false
+#  runAsUser: 999
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 9560
+  targetPort: 9560
+
+resources:
+  limits:
+#    cpu: 50m -- Don't recommend using cpu limits. It can shot in your leg.
+    memory: 512Mi
+  requests:
+    cpu: 10m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+strategy:
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+  type: RollingUpdate
+
+env: {}
+#  FOO: bar
+
+# For db_connetrions_string please use this template
+# dialect[+driver]://[username:password][@host:port]/database[?option=value&...]
+
+secrets: {}
+#  DB_CONNECTION_STRING: postgresql://postgres:password@pghost:5432/postgres
+
+# existingSecret uses a secret name in Kubernetes
+# if existingSecret described Kubernetes secret will not be created
+
+# Highly recommend using existing existingSecret
+### Example
+# kubectl create secret generic query-exporter -n monitoring
+# kubectl patch secret query-exporter -n monitoring -p='{"data":{"db_dsn": "<db_dsn_in_base64"}}' -v=1
+# existingSecret: query-exporter
+###
+existingSecret: ""
+
+readinessProbe:
+  failureThreshold: 4
+  httpGet:
+    path: /
+    port: 9560
+    scheme: HTTP
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  successThreshold: 1
+  timeoutSeconds: 2
+
+livenessProbe:
+  failureThreshold: 2
+  httpGet:
+    path: /
+    port: 9560
+    scheme: HTTP
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  successThreshold: 1
+  timeoutSeconds: 2
+
+extraVolumes: {}
+#  - name: query-exporter-conf
+#    configMap:
+#      name: query-exporter-queries
+#      items:
+#        - key: config.yaml
+#          path: config.yaml
+
+extraVolumeMounts: {}
+#  - mountPath: /config
+#    readOnly: true
+#    name: query-exporter-conf
+
+metrics:
+  serviceMonitor:
+    enabled: false
+    namespace: monitoring
+    interval: 10s
+    selector: {}
+
+exporter_config: |
+  databases:
+    db1:
+      dsn: env:DB_CONNECTION_STRING
+
+  metrics:
+    metrics1:
+      type: gauge
+      description: Blocks count
+
+  queries:
+    query1:
+      interval: 5
+      databases: [db1]
+      metrics: [metric1]
+      sql: SELECT random() / 1000000000000000 AS metric1
