@@ -16,6 +16,21 @@ entries:
     urls:
     - https://github.com/makezbs/helm-charts/releases/download/geth-0.1.0/geth-0.1.0.tgz
     version: 0.1.0
+  pgbouncer:
+  - apiVersion: v2
+    appVersion: 1.15.0
+    created: "2021-04-22T06:56:09.344767226Z"
+    description: PgBouncer - lightweight connection pooler for PostgreSQL
+    digest: 4baadf5b514507fdf7c6253802424721eee469b4d3f85feaeebe11fc3bfc77db
+    home: https://pgbouncer.github.io/
+    icon: https://www.postgresql.org/media/img/about/press/elephant.png
+    keywords:
+    - postgresql
+    - pgbouncer
+    name: pgbouncer
+    urls:
+    - https://github.com/makezbs/helm-charts/releases/download/pgbouncer-1.0.0/pgbouncer-1.0.0.tgz
+    version: 1.0.0
   query-exporter:
   - apiVersion: v1
     appVersion: 2.7.0
@@ -31,4 +46,4 @@ entries:
     urls:
     - https://github.com/makezbs/helm-charts/releases/download/query-exporter-0.1.0/query-exporter-0.1.0.tgz
     version: 0.1.0
-generated: "2021-04-21T12:20:56.547556412Z"
+generated: "2021-04-22T06:56:09.344773726Z"
