@@ -1,0 +1,166 @@
+fullnameOverride: ""
+
+replicaCount: 1
+image:
+  repository: edoburu/pgbouncer
+  tag: 1.15.0
+  pullPolicy: Always
+  args: ["pgbouncer", "/etc/pgbouncer/pgbouncer.ini"]
+
+antiAffinity: soft
+additionalAffinities: {}
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name:
+
+budget:
+  minAvailable: 0
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 10m
+    memory: 128Mi
+
+service:
+  name: pgbouncer
+  type: ClusterIP
+  port: 5432
+
+databases: {}
+  # dbname:
+  #   host: dbhost.dsfkljlk4j43.eu-central-1.rds.amazonaws.com
+  #   port: 5432
+  #   user: username-rw
+  #   dbname: postgres
+
+users: {}
+  # username: password
+
+generic_settings:
+  # logfile: /var/log/pgbouncer/pgbouncer.log
+  # pidfile: /var/run/pgbouncer/pgbouncer.pid
+  listen_addr: 0.0.0.0
+  listen_port: 5432
+  unix_socket_dir: /var/run/pgbouncer
+  # unix_socket_mode: 0777
+  # unix_socket_group:
+  # user:
+  auth_file: /etc/pgbouncer/userlist.txt
+  # auth_hba_file:
+  auth_type: md5 # any, trust, plain, crypt, md5, cert, hba, pam
+  # auth_query: SELECT usename, passwd FROM pg_shadow WHERE usename=$1
+  # auth_user
+  pool_mode: session # session, transaction, statement
+  # max_client_conn: 100
+  # default_pool_size: 20
+  # min_pool_size: 0
+  # reserve_pool_size: 0
+  # reserve_pool_timeout: 5.0
+  # max_db_connections: 0
+  # max_user_connections: 0
+  # server_round_robin: 0
+  # ignore_startup_parameters: extra_float_digits
+  # disable_pqexec: 0
+  # application_name_add_host: 0
+  # conffile
+  # service_name: pgbouncer
+  # job_name: pgbouncer
+  # stats_period: 60
+
+log_settings: {}
+  # syslog: 0
+  # syslog_ident: pgbouncer
+  # syslog_facility: daemon
+  # log_connections: 1
+  # log_disconnections: 1
+  # log_pooler_errors: 1
+  # log_stats: 1
+  # verbose: 0
+
+access_control_settings: {}
+  # admin_users: root
+  # stats_users: stats, root, monitor
+
+timeout_settings:
+  server_reset_query: DISCARD ALL
+  # server_reset_query_always: 0
+  # server_check_delay: 30.0
+  # server_check_query: select 1
+  # server_fast_close: 0
+  # server_lifetime: 3600
+  # server_idle_timeout: 600
+  # server_connect_timeout: 15
+  # server_login_retry: 15
+  # client_login_timeout: 60
+  # autodb_idle_timeout: 3600
+  # dns_max_ttl: 15
+  # dns_nxdomain_ttl: 15
+  # dns_zone_check_period: 0
+  # resolv_conf: ""
+
+tls_settings: {}
+  # client_tls_sslmode: disable
+  # client_tls_key_file:
+  # client_tls_cert_file:
+  # client_tls_ca_file:
+  # client_tls_ciphers: fast
+  # client_tls_ecdhcurve: auto
+  # client_tls_dheparams: auto
+  # server_tls_sslmode: disable
+  # client_tls_protocols: all
+  # server_tls_ca_file:
+  # server_tls_key_file:
+  # server_tls_cert_file:
+  # server_tls_protocols: all
+  # server_tls_ciphers: fast
+
+dangerous_timeout_settings: {}
+  # query_timeout: 0
+  # query_wait_timeout: 120
+  # client_idle_timeout: 0
+  # idle_transaction_timeout: 0
+  # suspend_timeout: 10
+
+network_settings: {}
+  # pkt_buf: 4096
+  # max_packet_size: 2147483647
+  # listen_backlog: 128
+  # sbuf_loopcnt: 5
+  # so_reuseport: 0
+  # tcp_defer_accept: 45
+  # tcp_socket_buffer:
+  # tcp_keepalive: 1
+  # tcp_keepcnt:
+  # tcp_keepidle:
+  # tcp_keepintvl
+  # tcp_user_timeout
+
+extra_settings: {}
+  # key: values => key = value
+
+env: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+livenessProbe: {}
+  # tcpSocket:
+  #   port: 5432
+  # initialDelaySeconds: 15
+  # periodSeconds: 10
+
+readinessProbe: {}
+  # tcpSocket:
+  #   port: 5432
+  # initialDelaySeconds: 15
+  # failureThreshold: 6
+  # periodSeconds: 10
