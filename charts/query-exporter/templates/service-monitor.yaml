@@ -19,7 +19,7 @@ spec:
     {{- end }}
   selector:
     matchLabels:
-      {{- include "query-exporter.selectorLabels" . | nindent 4 }}
+      {{- include "query-exporter.selectorLabels" . | nindent 6 }}
   namespaceSelector:
     matchNames:
     - {{ .Release.Namespace }}
