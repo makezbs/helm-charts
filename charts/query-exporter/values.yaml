@@ -132,3 +132,31 @@ exporter_config: |
       databases: [db1]
       metrics: [metric1]
       sql: SELECT random() / 1000000000000000 AS metric1
+
+# Implementation of SSL/TLS encrypted connection to the database.
+# The certificate for ssl is something generic, it is implemented in any 
+# database implementation, be it cloud or on-premise; however, we want to 
+# guide ourselves in something so that when we return to this in 6 months 
+# we know what we are talking about.
+
+# For that reason we attach documentation of aws rds aurora mysql to guide 
+# us in the configuration
+# https://docs.amazonaws.cn/en_us/AmazonRDS/latest/UserGuide/ssl-certificate-rotation-mysql.html
+
+# How to enforce for MYSQL SSL/TLS
+# Amazon RDS now support to enforce SSL/TLS connections, it is usefull in terms
+# of security side compliance.
+# flag: require_secure_transport
+# if your flag is require_secure_transport: true you need to enable the follwing section
+# extraVolumeMounts,extraVolumes and cert_db in order to upload a valid cert
+# inside the conectainer and it could be perform a ssl/tls secure connection.
+# Docs: https://aws.amazon.com/about-aws/whats-new/2022/08/amazon-rds-mysql-supports-ssl-tls-connections/ 
+
+# Where can I get a cert for RDS?
+# To get a certificate bundle that contains both the intermediate and root certificates for all AWS Regions, 
+# download from https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem.
+# Note: Also you can download your certificate bundle according to your region 
+# in the Certificate bundles for AWS Regions section.
+# ref: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
+
+cert_db: ""
