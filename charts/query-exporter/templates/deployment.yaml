@@ -18,14 +18,13 @@ spec:
       {{- include "query-exporter.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "query-exporter.selectorLabels" . | nindent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9560'
+        prometheus.io/path: '/metrics'
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
