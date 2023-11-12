@@ -2,7 +2,7 @@ apiVersion: v1
 appVersion: "2.7.0"
 description: A Helm chart for Kubernetes to run query-exporter
 name: query-exporter
-version: 0.1.1
+version: 0.1.2
 home: https://github.com/albertodonato/query-exporter
 icon: https://helm.sh/img/helm-logo.svg
 keywords:
