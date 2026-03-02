@@ -3,9 +3,9 @@ replicaCount: 1
 
 image:
   repository: adonato/query-exporter
-  tag: 2.7.0
+  tag: 4.0.1
   pullPolicy: IfNotPresent
-  command: ["query-exporter", "-H", "0.0.0.0", "--", "/config/config.yaml"]
+  command: ["query-exporter", "-H", "0.0.0.0", "--config", "/config/config.yaml"]
 
 nameOverride: "query-exporter"
 fullnameOverride: "query-exporter"
